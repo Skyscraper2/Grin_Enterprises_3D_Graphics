@@ -17,7 +17,8 @@ package graphics;
  * 
  *
  */
-public class View {
+public class View
+		extends Perspective {
 	
 	private int screenWidth; //width of the screen you're displaying on to convert to
 	private int screenHeight; //height of the screen you're displaying on to convert to
@@ -91,38 +92,6 @@ public class View {
 	public double getVertPos(Point p) {
 		return getPos(p.getX(), p.getY(), viewPoint.getX(), viewPoint.getY(), vertViewAngle, vertFOVAngle, 
 				screenHeight);
-	}
-	
-	/** getPos
-	 * 
-	 * @param pACoord
-	 * @param pBCoord
-	 * @param viewPointACoord
-	 * @param viewPointBCoord
-	 * @param viewAngle
-	 * @param FOVAngle
-	 * @param screenLength
-	 * @return the distance of the point from the side of the frame; depends on what the other methods give it
-	 * 
-	 * theoretically should only be used by getVertPos and getHoriPos, which is why it's protected
-	 * 
-	 * all those doubles are for my sake, so debugging is easier; will change once these are set
-	 * 
-	 */
-	protected double getPos(double pACoord, double pBCoord, double viewPointACoord, double viewPointBCoord,
-			double viewAngle, double FOVAngle, int screenLength) {
-
-		double angleFromZero = Math.atan((viewPointBCoord - pBCoord) / (viewPointACoord - pACoord));
-		double angleFromViewangle = (viewAngle + FOVAngle) - angleFromZero;
-		double distanceFromViewpoint = Math.sqrt(
-				Math.pow(pACoord - viewPointACoord, 2.0) + Math.pow(pBCoord - viewPointBCoord, 2.0)
-		);
-		double distanceFromViewline = distanceFromViewpoint * Math.sin(angleFromViewangle);
-		double distanceOfViewline = distanceFromViewpoint * Math.cos(angleFromViewangle);
-		double lengthFrame = distanceOfViewline * Math.tan(FOVAngle);
-		
-		return ((lengthFrame / 2) + distanceFromViewline) * (screenLength / lengthFrame);
-		
 	}
 	
 }
