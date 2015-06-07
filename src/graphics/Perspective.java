@@ -20,9 +20,9 @@ public class Perspective {
 	 */
 	protected double getPos(double pACoord, double pBCoord, double viewPointACoord, double viewPointBCoord,
 			double viewAngle, double FOVAngle, int screenLength) {
-
-		double angleFromZero = Math.atan((viewPointBCoord - pBCoord) / (viewPointACoord - pACoord));
-		double angleFromViewangle = (viewAngle + FOVAngle) - angleFromZero;
+		
+		double angleFromViewAbsolute = Math.atan((pBCoord - viewPointBCoord) / (pACoord - viewPointACoord));
+		double angleFromViewangle = (viewAngle + FOVAngle) - angleFromViewAbsolute;
 		double distanceFromViewpoint = Math.sqrt(
 				Math.pow(pACoord - viewPointACoord, 2.0) + Math.pow(pBCoord - viewPointBCoord, 2.0)
 		);

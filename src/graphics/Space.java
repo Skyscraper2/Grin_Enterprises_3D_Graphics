@@ -13,17 +13,27 @@ public class Space {
 	private int xLimit;
 	private int yLimit;
 	private int zLimit;
+	private Point[] containedPoints;
 	
 	public Space() {
 		xLimit = 100;
 		yLimit = 100;
 		zLimit = 100;
+		containedPoints = new Point[0];
 	}
 	
 	public Space(int width, int height, int breadth) {
 		xLimit = width;
 		yLimit = height;
 		zLimit = breadth;
+		containedPoints = new Point[0];
+	}
+	
+	public Space(int width, int height, int breadth, Point[] pointsInSpace) {
+		xLimit = width;
+		yLimit = height;
+		zLimit = breadth;
+		containedPoints = pointsInSpace;
 	}
 	
 	public int getWidth() {
@@ -36,6 +46,22 @@ public class Space {
 	
 	public int getBreadth() {
 		return zLimit;
+	}
+	
+	public Point[] getContainedPoints() {
+		return containedPoints;
+	}
+	
+	public Point getContainedPoint(int index) {
+		return containedPoints[index];
+	}
+	
+	public void addContainedPoint(Point point) {
+		containedPoints = Point.addToArrayEnd(containedPoints, point);
+	}
+	
+	public void removeContainedPoint(Point containedPoint) {
+		containedPoints = Point.removeFromArray(containedPoints, containedPoint);
 	}
 	
 }

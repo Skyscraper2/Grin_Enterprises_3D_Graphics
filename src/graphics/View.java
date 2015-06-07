@@ -14,19 +14,27 @@ package graphics;
  * I'll keep the method for continuous rotation generic, and just apply it as necessary
  * maybe in a child to this or something
  * 
- * 
+ * there will be a problem with drawing points that are off screen. 
+ * The thing is, if I want to draw polygons, sometimes the associated points will be off-screen
+ * hopefully the thing can still get coordinates for stuff that's off screen.
+ * We'll see
  *
  */
 public class View
 		extends Perspective {
 	
-	private int screenWidth; //width of the screen you're displaying on to convert to
-	private int screenHeight; //height of the screen you're displaying on to convert to
-	private double vertFOVAngle; //half the angle of the horizontal FOV, just because half comes up more
-	private double horiFOVAngle; //half the angle of the vertical FOV, just because half comes up more
-	private double vertViewAngle; //the angle above the xz-plane that the center of the view is
-	private double horiViewAngle; //the angle in front of the xy-plane that the center of the view is
-	private Point viewPoint; //the point from which the lines of the view radiate
+	public static final int HORIZONTAL = 0;
+	public static final int VERTICAL = 1;
+	
+	protected int screenWidth; //width of the screen you're displaying on to convert to
+	protected int screenHeight; //height of the screen you're displaying on to convert to
+	protected double vertFOVAngle; //half the angle of the horizontal FOV, just because half comes up more
+	protected double horiFOVAngle; //half the angle of the vertical FOV, just because half comes up more
+	protected double vertViewAngle; //the angle above the xz-plane that the center of the view is
+	protected double horiViewAngle; //the angle in front of the xy-plane that the center of the view is
+//n/m	protected double sideViewAngle; //the angle to the side of the yz-plane that the center of the view is
+	protected Point viewPoint; //the point from which the lines of the view radiate
+	protected Space viewSpace; //the space the view is viewing
 	
 	public View() {
 		screenWidth = 600;
@@ -35,7 +43,9 @@ public class View
 		horiFOVAngle = vertFOVAngle * (screenHeight / screenWidth);;
 		vertViewAngle = 0;
 		horiViewAngle = Math.PI / 4;
+//n/m		sideViewAngle = 0;
 		viewPoint = new Point(); //'cos default is at 0, 0, 0
+		viewSpace = new Space();
 	}
 	
 	/** View
@@ -47,16 +57,41 @@ public class View
 	 * @param startingVertViewAngle
 	 * @param startingHoriViewAngle
 	 * @param startingLocation
+	 * @param spaceViewed
 	 */
-	public View(int width, int height, double vertFOV, double horiFOV, double startingVertViewAngle,
-			double startingHoriViewAngle, Point startingLocation) {
+	public View(int width, int height, double vertFOV, double horiFOV, double startingVertViewAngle, 
+			double startingHoriViewAngle, /*double startingSideViewAngle, */Point startingLocation, 
+			Space spaceViewed) {
 		screenWidth = width;
 		screenHeight = height;
 		vertFOVAngle = vertFOV;
 		horiFOVAngle = horiFOV;
 		vertViewAngle = startingVertViewAngle;
 		horiViewAngle = startingHoriViewAngle;
+//n/m		sideViewAngle = startingSideViewAngle;
 		viewPoint = startingLocation;
+		viewSpace = spaceViewed;
+	}
+	
+	/** getPointCoords
+	 * 
+	 * @return a two-dimensional double array of the points' coordinates on screen.
+	 * 
+	 * For now doesn't really distinguish between points on screen and not on screen; not sure if that'll just
+	 * work out through the math or if we'll have to code more
+	 * 
+	 */
+	public double[][] getPointCoords() {
+		Point[] pointsInSpace = viewSpace.getContainedPoints();
+		int pointsInSpaceLength = pointsInSpace.length;
+		double[][] pointCoords = new double[2][pointsInSpaceLength];
+		
+		for (int i = 0; i < pointsInSpaceLength; i++) {
+			pointCoords[HORIZONTAL][i] = getHoriPos(pointsInSpace[i]);
+			pointCoords[VERTICAL][i] = getVertPos(pointsInSpace[i]);
+		}
+		
+		return pointCoords;
 	}
 	
 	/** getHoriPos
