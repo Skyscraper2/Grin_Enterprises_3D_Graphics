@@ -1,5 +1,13 @@
 package graphics;
 
+/** Space notes
+ * 
+ * @author lundquistg
+ * 
+ * One corner is 0, 0, 0; there are no ngeative values
+ * (at least that's how it'll be for now)
+ *
+ */
 public class Space {
 	
 	private int xLimit;
