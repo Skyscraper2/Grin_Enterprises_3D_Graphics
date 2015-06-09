@@ -4,6 +4,10 @@ public class Perspective {
 
 	/** getPos
 	 * 
+	 * theoretically should only be used by getVertPos and getHoriPos, which is why it's protected
+	 * 
+	 * all those doubles are for my sake, so debugging is easier; will change once these are set
+	 * 
 	 * @param pACoord
 	 * @param pBCoord
 	 * @param viewPointACoord
@@ -12,10 +16,6 @@ public class Perspective {
 	 * @param FOVAngle
 	 * @param screenLength
 	 * @return the distance of the point from the side of the frame; depends on what the other methods give it
-	 * 
-	 * theoretically should only be used by getVertPos and getHoriPos, which is why it's protected
-	 * 
-	 * all those doubles are for my sake, so debugging is easier; will change once these are set
 	 * 
 	 */
 	protected double getPos(double pACoord, double pBCoord, double viewPointACoord, double viewPointBCoord,
@@ -30,17 +30,20 @@ public class Perspective {
 		double distanceOfViewline = distanceFromViewpoint * Math.cos(angleFromViewangle);
 		double lengthFrame = distanceOfViewline * Math.tan(FOVAngle);
 		
+		System.out.println("((" + lengthFrame + " / 2) + " + distanceFromViewline + ") * (" + screenLength + " / " 
+				+ lengthFrame + ")");
+		
 		return ((lengthFrame / 2) + distanceFromViewline) * (screenLength / lengthFrame);
 		
 	}
 	
 	/** checkViewingAngleContinuous
 	 * 
-	 * @param lowerAngle
-	 * @return lowerAngle if it's fine; lowerAngle + 2π is it's below zero; lowerAngle - 2π if it's above 2π
-	 * 
 	 * the idea behind this one is it allows you to roll over angles
 	 * make sure in implementation to change both upper and lower angles (chose to do it this way for efficiency)
+	 * 
+	 * @param lowerAngle
+	 * @return lowerAngle if it's fine; lowerAngle + 2π is it's below zero; lowerAngle - 2π if it's above 2π
 	 * 
 	 */
 	public double checkViewAngleContinuous(double lowerAngle) {
@@ -59,17 +62,17 @@ public class Perspective {
 	
 	/** checkViewAngleLimited
 	 * 
-	 * @param lowerAngle
-	 * @param fovAngle
-	 * @param lowerLimit
-	 * @param upperLimit
-	 * @return lowerAngle if it's between the limits; the limit if it's above or below said limit
-	 * 
 	 * this just makes sure the use can't go above a certain angle
 	 * 
 	 * might also change this so that if they're at a certain angle they just can't move their mouse
 	 * 
 	 * make sure in implementation to change both upper and lower angles (chose to do it this way for efficiency)
+	 * 
+	 * @param lowerAngle
+	 * @param fovAngle
+	 * @param lowerLimit
+	 * @param upperLimit
+	 * @return lowerAngle if it's between the limits; the limit if it's above or below said limit
 	 * 
 	 */
 	public double checkViewAngleLimited(double lowerAngle, double fovAngle, double lowerLimit, double upperLimit) {

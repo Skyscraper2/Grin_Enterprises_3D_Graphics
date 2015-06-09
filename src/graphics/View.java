@@ -2,8 +2,6 @@ package graphics;
 
 /** Notes on View
  * 
- * @author lundquistg
- * 
  * In code: vert and hori refer to the 2D image; x, y, and z refer to the 3D space
  * 
  * I'm hesitant to put limits like this on it, but what's gonna have to happen is you can only go
@@ -18,7 +16,9 @@ package graphics;
  * The thing is, if I want to draw polygons, sometimes the associated points will be off-screen
  * hopefully the thing can still get coordinates for stuff that's off screen.
  * We'll see
- *
+ * 
+ * @author lundquistg
+ * 
  */
 public class View
 		extends Perspective {
@@ -72,32 +72,42 @@ public class View
 		viewPoint = startingLocation;
 		viewSpace = spaceViewed;
 	}
+
+	public Space getViewSpace() {
+		return viewSpace;
+	}
+	
+	public void addViewSpaceContainedPoint(Point pointToAdd) {
+		viewSpace.addContainedPoint(pointToAdd);
+	}
+	
+	public void removeViewSpaceContainedPoint(Point pointToRemove) {
+		viewSpace.removeContainedPoint(pointToRemove);
+	}
 	
 	/** getPointCoords
 	 * 
-	 * @return a two-dimensional double array of the points' coordinates on screen.
-	 * 
 	 * For now doesn't really distinguish between points on screen and not on screen; not sure if that'll just
 	 * work out through the math or if we'll have to code more
+	 * 
+	 * @return a two-dimensional double array of the points' coordinates on screen.
 	 * 
 	 */
 	public double[][] getPointCoords() {
 		Point[] pointsInSpace = viewSpace.getContainedPoints();
 		int pointsInSpaceLength = pointsInSpace.length;
-		double[][] pointCoords = new double[2][pointsInSpaceLength];
+		double[][] pointCoords = new double[pointsInSpaceLength][2];
 		
 		for (int i = 0; i < pointsInSpaceLength; i++) {
-			pointCoords[HORIZONTAL][i] = getHoriPos(pointsInSpace[i]);
-			pointCoords[VERTICAL][i] = getVertPos(pointsInSpace[i]);
+			pointCoords[i][HORIZONTAL] = getHoriPos(pointsInSpace[i]);
+			pointCoords[i][VERTICAL] = getVertPos(pointsInSpace[i]);
+			System.out.println(pointCoords[i][HORIZONTAL] + " " + pointCoords[i][VERTICAL]);
 		}
 		
 		return pointCoords;
 	}
 	
 	/** getHoriPos
-	 * 
-	 * @param p
-	 * @return the distance of p from the right edge of the screen (inconvenient, I know; may change)
 	 * 
 	 * this could alllll be deleted, but it's for my sake, debugging and all that
 	 * honestly I could also structure both getHoriPos and getVertPos so that there's just one getPos method
@@ -110,6 +120,9 @@ public class View
 	 * 
 	 * okay NOW it jsut gives getPos x and z coordinates and returns what it gets
 	 * 
+	 * @param p
+	 * @return the distance of p from the right edge of the screen (inconvenient, I know; may change)
+	 * 
 	 */
 	public double getHoriPos(Point p) {
 		return getPos(p.getX(), p.getZ(), viewPoint.getX(), viewPoint.getZ(), horiViewAngle, horiFOVAngle, 
@@ -118,10 +131,10 @@ public class View
 	
 	/** getVertPos
 	 * 
+	 * just gives getPos x and y coordinates and returns what it gets 
+	 * 
 	 * @param p
 	 * @return the distance of p from the bottom edge of the screen (inconvenient, I know; may change)
-	 * 
-	 * just gives getPos x and y coordinates and returns what it gets 
 	 * 
 	 */
 	public double getVertPos(Point p) {

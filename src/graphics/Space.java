@@ -56,8 +56,8 @@ public class Space {
 		return containedPoints[index];
 	}
 	
-	public void addContainedPoint(Point point) {
-		containedPoints = Point.addToArrayEnd(containedPoints, point);
+	public void addContainedPoint(Point containedPoint) {
+		containedPoints = Point.addToArrayEnd(containedPoints, containedPoint);
 	}
 	
 	public void removeContainedPoint(Point containedPoint) {
